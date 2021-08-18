@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  annotations:
+    tekton.dev/tags: git, test
+  name: gud-git
+spec:
+  description: >-
+    This Task test git commits for violations.
+
+    Intended to be used in pull requests. Validates commits between HEAD and target branch.
+  params:
+  - name: targetBranch
+    type: string
+    description: target branch
+    default: refs/heads/main
+  - name: image
+    type: string
+    descripion: container image
+    default: ghcr.io/alxbse/gud-git
+  steps:
+  - name: gud-git
+    image: $(params.image)
+    args:
+    - -target-revision
+    - $(params.targetBranch)
+    workingDir: $(workspaces.source.path)
+  workspaces:
+  - name: source
