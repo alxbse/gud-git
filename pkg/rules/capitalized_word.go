@@ -40,8 +40,9 @@ func (r *RuleCapitalizedWord) Validate(commit *object.Commit) (bool, string) {
 	highlights := []string{}
 	highlights = append(highlights, strings.Repeat(" ", len(words[0])))
 	for _, word := range words[1:] {
+		isNumber := unicode.IsNumber(rune(word[0]))
 		lower := strings.ToLower(word)
-		if word == strings.Title(lower) {
+		if !isNumber && word == strings.Title(lower) {
 			highlight := fmt.Sprint("^", strings.Repeat(" ", len(word)-1))
 			highlights = append(highlights, highlight)
 		} else {

@@ -47,6 +47,13 @@ func TestRuleCapitalizedWord(t *testing.T) {
 			},
 			expected: true,
 		},
+		{
+			name: "version number should not count as capitalization",
+			commit: object.Commit{
+				Message: "Version like 1.2.3 is OK",
+			},
+			expected: true,
+		},
 	}
 
 	for _, tc := range tt {
