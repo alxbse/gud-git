@@ -1,0 +1,44 @@
+name: build
+on:
+- push
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Login to container registry
+      uses: docker/login-action@v1.10.0
+      with:
+        registry: ghcr.io
+        username: "${{ github.actor }}"
+        password: "${{ secrets.GITHUB_TOKEN }}"
+    - name: Extract metadata
+      id: metadata
+      uses: docker/metadata-action@v3.5.0
+      with:
+        images: "ghcr.io/${{ github.repository }}"
+        tags: |
+          type=ref,event=tag
+          type=sha,prefix=,suffix=,format=short
+    - run: echo "tags is ${{ steps.metadata.outputs.tags }}"
+    - name: Build and push container image
+      id: build
+      uses: docker/build-push-action@v2.7.0
+      with:
+        file: Containerfile
+        push: true
+        tags: "${{ steps.metadata.outputs.tags }}"
+        labels: "${{ steps.metadata.outputs.labels }}"
+    - name: Patch tekton task
+      uses: mikefarah/yq@v4.12.2
+      with:
+        cmd: yq eval --inplace '(.spec.params[] | select(.name == "image").default) = "ghcr.io/${{ github.repository}}@${{ steps.build.outputs.digest }}"' tektoncd/task.yaml
+    - run: |
+        cat ${{ github.workspace}}/tektoncd/task.yaml
+    - name: Push tekton bundle
+      uses: ./.github/actions/oras-push-action
+      with:
+        registry: "ghcr.io/alxbse/gud-git-tekton-bundle:${{ steps.metadata.outputs.version }}"
+        username: "${{ github.actor }}"
+        password: "${{ secrets.GITHUB_TOKEN }}"

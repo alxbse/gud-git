@@ -1,0 +1,22 @@
+name: 'oras push'
+description: 'oras push'
+inputs:
+  registry:
+    description: 'registry'
+    required: true
+  username:
+    description: 'username'
+    required: true
+  password:
+    description: 'password'
+    required: true
+outputs:
+  test:
+    description: 'test'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+  - ${{ inputs.registry }}
+  - ${{ inputs.username }}
+  - ${{ inputs.password }}
