@@ -14,8 +14,10 @@ import (
 func main() {
 	var targetRevision string
 	var rule string
+	var maxTitleLength int
 	flag.StringVar(&targetRevision, "target-revision", "refs/heads/main", "target revision")
 	flag.StringVar(&rule, "rule", "", "rule")
+	flag.IntVar(&maxTitleLength, "max-title-length", 72, "max title length")
 	flag.Parse()
 
 	repo, err := git.PlainOpen(".")
@@ -74,8 +76,6 @@ func main() {
 		"upgrade",
 	}
 
-	maxLength := 64
-
 	prepositions := []string{
 		"of",
 		"in",
@@ -109,7 +109,7 @@ func main() {
 				KnownVerbs: knownVerbs,
 			},
 			&RuleTitleLength{
-				MaxLength: maxLength,
+				MaxLength: maxTitleLength,
 			},
 			&RuleBaseFormVerb{},
 			&RuleCapitalizedWord{},
