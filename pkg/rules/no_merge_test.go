@@ -12,14 +12,20 @@ func TestRegexp(t *testing.T) {
 		expected []string
 	}{
 		{
-			name:     "hello",
-			title:    "Merge branch 'hello'",
-			expected: []string{"hello"},
+			name:  "hello",
+			title: "Merge branch 'hello'",
+			expected: []string{
+				"Merge branch 'hello'",
+				"hello",
+			},
 		},
 		{
-			name:     "remote",
-			title:    "Merge remote-tracking branch 'hello'",
-			expected: []string{"hello"},
+			name:  "remote",
+			title: "Merge remote-tracking branch 'hello'",
+			expected: []string{
+				"Merge remote-tracking branch 'hello'",
+				"hello",
+			},
 		},
 	}
 
