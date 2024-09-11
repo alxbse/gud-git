@@ -105,11 +105,12 @@ func main() {
 			&RuleNoSingleWord{},
 			&RuleNoIssueNumber{},
 			&RuleNoConventionalSpec{},
-			&RuleKnownVerb{
-				KnownVerbs: knownVerbs,
-			},
+			&RuleNoTypeNames{},
 			&RuleTitleLength{
 				MaxLength: maxTitleLength,
+			},
+			&RuleKnownVerb{
+				KnownVerbs: knownVerbs,
 			},
 			&RuleBaseFormVerb{},
 			&RuleCapitalizedWord{},
