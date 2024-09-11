@@ -1,4 +1,4 @@
-FROM golang:1.17.1-bullseye AS builder
+FROM docker.io/library/golang:1.17.1-bullseye AS builder
 COPY . /src
 WORKDIR /src
 ENV CGO_ENABLED=0
