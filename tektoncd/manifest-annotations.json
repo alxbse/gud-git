@@ -1,7 +1,0 @@
-{
-	"task.yaml.gz": {
-		"dev.tekton.image.name": "gud-git",
-		"dev.tekton.image.kind": "task",
-		"dev.tekton.image.apiVersion": "tekton.dev/v1beta1"
-	}
-}
