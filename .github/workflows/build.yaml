@@ -2,33 +2,36 @@ name: build
 permissions:
   contents: read
 on:
-- push
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
 jobs:
   buildah:
     runs-on: ubuntu-latest
     permissions:
       packages: write
     steps:
-    - uses: actions/checkout@v4
-    - uses: docker/metadata-action@v5.7.0
-      id: metadata
-      with:
-        images: ghcr.io/${{ github.repository }}
-        tags: |
-          type=ref,event=tag
-          type=sha,prefix=,suffix=,format=short
-    - run: echo "tags is ${{ steps.metadata.outputs.tags }}"
-    - uses: redhat-actions/buildah-build@v2.13
-      id: buildah-build
-      with:
-        containerfiles: |
-          Containerfile
-        tags: ${{ steps.metadata.outputs.tags }}
-    - uses: redhat-actions/podman-login@v1.7
-      with:
-        registry: ghcr.io/${{ github.repository_owner}}
-        username: ${{ github.actor }}
-        password: ${{ github.token }}
-    - uses: redhat-actions/push-to-registry@v2.8
-      with:
-        tags: ${{ steps.buildah-build.outputs.tags }}
+      - uses: actions/checkout@v4
+      - uses: docker/metadata-action@v5.7.0
+        id: metadata
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=tag
+            type=sha,prefix=,suffix=,format=short
+      - uses: redhat-actions/buildah-build@v2.13
+        id: buildah-build
+        with:
+          containerfiles: |
+            Containerfile
+          tags: ${{ steps.metadata.outputs.tags }}
+      - uses: redhat-actions/podman-login@v1.7
+        with:
+          registry: ghcr.io/${{ github.repository_owner}}
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - uses: redhat-actions/push-to-registry@v2.8
+        with:
+          tags: ${{ steps.buildah-build.outputs.tags }}
