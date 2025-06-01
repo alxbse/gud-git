@@ -1,0 +1,24 @@
+version: 2
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goarch:
+      - amd64
+      - arm64
+    goos:
+      - linux
+      - windows
+      - darwin
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+    main: ./cmd/gud-git
+checksum:
+  name_template: "{{ .ProjectName }}_SHA256SUMS"
+archives:
+  - formats: [binary]
+    name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+release:
+  include_meta: false
+  prerelease: auto
